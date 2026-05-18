@@ -10,6 +10,16 @@ builder.Services.AddControllers();
 // 添加 Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173", "http://127.0.0.1:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
 
 // 注册数据库上下文 (使用 SQLite 方便本地测试，无需安装 SQL Server)
 builder.Services.AddDbContext<AppDbContext>(option =>
@@ -39,6 +49,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.UseHttpsRedirection();
+app.UseCors("Frontend");
 app.UseAuthorization();
 app.MapControllers();
 
