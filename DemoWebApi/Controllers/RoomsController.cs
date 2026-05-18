@@ -1,5 +1,7 @@
 using DemoWebApi.Models.Dtos;
+using DemoWebApi.Models.Entities;
 using DemoWebApi.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DemoWebApi.Controllers;
@@ -15,6 +17,7 @@ public class RoomsController : ControllerBase
         _roomService = roomService;
     }
 
+    [Authorize(Roles = nameof(UserRole.SuperAdmin))]
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateRoomRequest request)
     {
@@ -22,6 +25,7 @@ public class RoomsController : ControllerBase
         return StatusCode(result.Code == 200 ? 200 : result.Code, result);
     }
 
+    [Authorize]
     [HttpGet("{id}")]
     public async Task<IActionResult> GetById(byte id)
     {
@@ -29,6 +33,7 @@ public class RoomsController : ControllerBase
         return StatusCode(result.Code == 200 ? 200 : result.Code, result);
     }
 
+    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetAll()
     {
@@ -36,6 +41,7 @@ public class RoomsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize]
     [HttpGet("{id}/things")]
     public async Task<IActionResult> GetThings(byte id)
     {
@@ -43,6 +49,7 @@ public class RoomsController : ControllerBase
         return StatusCode(result.Code == 200 ? 200 : result.Code, result);
     }
 
+    [Authorize(Roles = nameof(UserRole.SuperAdmin))]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(byte id, [FromBody] UpdateRoomRequest request)
     {
@@ -50,6 +57,7 @@ public class RoomsController : ControllerBase
         return StatusCode(result.Code == 200 ? 200 : result.Code, result);
     }
 
+    [Authorize(Roles = nameof(UserRole.SuperAdmin))]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(byte id)
     {

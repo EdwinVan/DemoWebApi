@@ -134,6 +134,39 @@ button {
   font-family: "Bahnschrift", "Segoe UI", sans-serif;
 }
 
+.auth-box {
+  margin-top: 16px;
+}
+
+.auth-form {
+  display: grid;
+  gap: 10px;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 6px;
+}
+
+.auth-form span,
+.auth-meta {
+  color: rgba(247, 245, 239, 0.75);
+  font-size: 0.84rem;
+}
+
+.auth-user p {
+  margin: 0;
+}
+
+.auth-user .ghost-button {
+  margin-top: 12px;
+}
+
+.logout-button {
+  background: rgba(223, 155, 45, 0.24);
+  color: #5f4618;
+}
+
 .mini-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -327,9 +360,113 @@ button {
   gap: 8px;
 }
 
+.full-row {
+  grid-column: 1 / -1;
+}
+
 .form-grid span {
   font-size: 0.9rem;
   color: var(--muted);
+}
+
+.hint {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.input-with-action {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.9);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+  overflow: hidden;
+}
+
+.input-with-action:hover {
+  border-color: rgba(33, 45, 66, 0.22);
+  background: rgba(255, 255, 255, 0.98);
+}
+
+.input-with-action:focus-within {
+  border-color: rgba(15, 123, 108, 0.45);
+  box-shadow: 0 0 0 2px rgba(15, 123, 108, 0.12);
+  background: #fff;
+}
+
+.input-with-action input {
+  border: none;
+  background: transparent;
+  min-height: 44px;
+  padding: 11px 14px;
+}
+
+.input-with-action input:focus {
+  box-shadow: none;
+}
+
+.input-action,
+.input-addon {
+  border-left: 1px solid var(--line);
+  min-height: 44px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-action {
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  background: rgba(15, 123, 108, 0.08);
+  color: var(--brand-deep);
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.icon-action {
+  width: 42px;
+  padding: 0;
+}
+
+.icon-action svg {
+  width: 18px;
+  height: 18px;
+}
+
+.input-addon {
+  color: var(--muted);
+  background: rgba(29, 36, 51, 0.04);
+  font-size: 0.82rem;
+}
+
+.age-input {
+  text-align: right;
+}
+
+.password-rules {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.password-rules span {
+  font-size: 0.76rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 2px 8px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.password-rules span.ok {
+  border-color: rgba(15, 123, 108, 0.4);
+  color: var(--brand-deep);
+  background: rgba(15, 123, 108, 0.12);
 }
 
 input[type="text"],
@@ -346,9 +483,21 @@ select {
   transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
 }
 
+input[type="password"] {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--ink);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+}
+
 input[type="text"]:hover,
 input[type="email"]:hover,
 input[type="number"]:hover,
+input[type="password"]:hover,
 select:hover {
   border-color: rgba(33, 45, 66, 0.22);
   background: rgba(255, 255, 255, 0.98);
@@ -357,11 +506,36 @@ select:hover {
 input[type="text"]:focus,
 input[type="email"]:focus,
 input[type="number"]:focus,
+input[type="password"]:focus,
 select:focus {
   outline: none;
   border-color: rgba(15, 123, 108, 0.45);
   box-shadow: 0 0 0 2px rgba(15, 123, 108, 0.12);
   background: #fff;
+}
+
+.input-with-action input[type="text"],
+.input-with-action input[type="email"],
+.input-with-action input[type="number"],
+.input-with-action input[type="password"] {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent;
+  min-height: 44px;
+}
+
+.input-with-action input[type="text"]:hover,
+.input-with-action input[type="email"]:hover,
+.input-with-action input[type="number"]:hover,
+.input-with-action input[type="password"]:hover,
+.input-with-action input[type="text"]:focus,
+.input-with-action input[type="email"]:focus,
+.input-with-action input[type="number"]:focus,
+.input-with-action input[type="password"]:focus {
+  border: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 select {
@@ -406,6 +580,11 @@ select option {
 .primary-button {
   background: linear-gradient(135deg, var(--brand), var(--brand-deep));
   color: white;
+}
+
+.primary-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .ghost-button {

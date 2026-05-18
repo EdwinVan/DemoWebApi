@@ -1,12 +1,24 @@
 const API_BASE = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/$/, "");
 
+let authToken = "";
+
+export function setAuthToken(token) {
+  authToken = token || "";
+}
+
 async function request(path, options = {}) {
+  const headers = {
+    "Content-Type": "application/json",
+    ...(options.headers || {})
+  };
+
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
+  }
+
   const response = await fetch(`${API_BASE}${path}`, {
-    headers: {
-      "Content-Type": "application/json",
-      ...(options.headers || {})
-    },
-    ...options
+    ...options,
+    headers
   });
 
   const isJson = response.headers.get("content-type")?.includes("application/json");
@@ -21,6 +33,15 @@ async function request(path, options = {}) {
 }
 
 export const api = {
+  login(data) {
+    return request("/api/Auth/login", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+  },
+  getMe() {
+    return request("/api/Auth/me");
+  },
   getHealth() {
     return request("/api/Home/health");
   },

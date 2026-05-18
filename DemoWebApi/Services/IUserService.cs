@@ -2,9 +2,6 @@ using DemoWebApi.Models.Dtos;
 
 namespace DemoWebApi.Services;
 
-/// <summary>
-/// 用户服务接口
-/// </summary>
 public interface IUserService
 {
     Task<ApiResponse<UserResponse>> CreateAsync(CreateUserRequest request);

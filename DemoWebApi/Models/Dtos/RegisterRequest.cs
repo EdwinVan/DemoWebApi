@@ -1,12 +1,9 @@
-using DemoWebApi.Models.Entities;
-
 namespace DemoWebApi.Models.Dtos;
 
-public class CreateUserRequest
+public class RegisterRequest
 {
     public string UserName { get; set; } = string.Empty;
     public string Email { get; set; } = string.Empty;
     public int Age { get; set; }
     public string Password { get; set; } = string.Empty;
-    public UserRole Role { get; set; } = UserRole.NormalUser;
 }

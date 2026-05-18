@@ -3,7 +3,7 @@ import vue from "@vitejs/plugin-vue";
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
-  const target = env.VITE_PROXY_TARGET || "http://localhost:5159";
+  const target = env.VITE_PROXY_TARGET || "https://localhost:7159";
 
   return {
     plugins: [vue()],

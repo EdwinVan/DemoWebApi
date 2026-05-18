@@ -2,9 +2,6 @@ using DemoWebApi.Models.Entities;
 
 namespace DemoWebApi.Models.Dtos;
 
-/// <summary>
-/// 用户响应数据
-/// </summary>
 public class UserResponse
 {
     public int Id { get; set; }
@@ -13,6 +10,8 @@ public class UserResponse
     public int Age { get; set; }
     public DateTime CreatedAt { get; set; }
     public bool IsActive { get; set; }
+    public UserRole Role { get; set; }
+    public DateTime? LastLoginAt { get; set; }
 
     public static UserResponse FromEntity(User user)
     {
@@ -23,7 +22,9 @@ public class UserResponse
             Email = user.Email,
             Age = user.Age,
             CreatedAt = user.CreatedAt,
-            IsActive = user.IsActive
+            IsActive = user.IsActive,
+            Role = user.Role,
+            LastLoginAt = user.LastLoginAt
         };
     }
 }
