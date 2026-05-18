@@ -46,6 +46,7 @@ public class AppDbContext : DbContext
             entity.Property(e => e.Color).HasColumnName("color").HasMaxLength(255);
             entity.Property(e => e.Price).HasColumnName("price").HasPrecision(10, 2);
             entity.Property(e => e.Number).HasColumnName("number");
+            entity.Property(e => e.Description).HasColumnName("description").HasMaxLength(255);
         });
     }
 }

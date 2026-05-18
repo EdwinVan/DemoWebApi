@@ -31,6 +31,7 @@ builder.Services.AddDbContext<AppDbContext>(option =>
 // 注册业务服务（依赖注入）
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IThingService, ThingService>();
 
 var app = builder.Build();
 

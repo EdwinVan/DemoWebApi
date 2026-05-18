@@ -333,7 +333,8 @@ button {
 
 input[type="text"],
 input[type="email"],
-input[type="number"] {
+input[type="number"],
+select {
   width: 100%;
   padding: 12px 14px;
   border-radius: var(--radius-sm);

@@ -13,7 +13,7 @@ async function request(path, options = {}) {
   const payload = isJson ? await response.json() : null;
 
   if (!response.ok) {
-    const message = payload?.message || payload?.Message || `请求失败: ${response.status}`;
+    const message = payload?.message || payload?.Message || `Request failed: ${response.status}`;
     throw new Error(message);
   }
 
@@ -69,5 +69,25 @@ export const api = {
   },
   getRoomThings(id) {
     return request(`/api/Rooms/${id}/things`);
+  },
+  getThings() {
+    return request("/api/Things");
+  },
+  createThing(data) {
+    return request("/api/Things", {
+      method: "POST",
+      body: JSON.stringify(data)
+    });
+  },
+  updateThing(id, data) {
+    return request(`/api/Things/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(data)
+    });
+  },
+  deleteThing(id) {
+    return request(`/api/Things/${id}`, {
+      method: "DELETE"
+    });
   }
 };
