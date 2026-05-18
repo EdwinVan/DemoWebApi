@@ -8,6 +8,7 @@
 # .NET build outputs
 **/bin/
 **/obj/
+**/temp_build/
 
 # Frontend build outputs
 **/node_modules/
