@@ -3,3 +3,21 @@
 ################################################################################
 
 /.vs
+**/.vs/
+
+# .NET build outputs
+**/bin/
+**/obj/
+
+# Frontend build outputs
+**/node_modules/
+**/dist/
+
+# Local cache/temp files
+*.lscache
+*.db
+*.db-shm
+*.db-wal
+
+# Local development settings (may contain machine-specific secrets)
+**/appsettings.Development.json

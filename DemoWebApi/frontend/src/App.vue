@@ -1,5 +1,5 @@
 <script setup>
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, onUnmounted, reactive, ref } from "vue";
 import { api } from "./api/client";
 
 const tabs = [
@@ -23,7 +23,7 @@ const loadingThings = ref(false);
 const loadingUsers = ref(false);
 const roomThingsLoading = ref(false);
 
-const roomForm = reactive({ id: null, computerId: "", bedId: "" });
+const roomForm = reactive({ id: null, computerId: null, bedId: null });
 const thingForm = reactive({
   sourceId: null,
   color: "Red",
@@ -34,6 +34,8 @@ const thingForm = reactive({
 const userForm = reactive({ id: null, userName: "", email: "", age: "", isActive: true });
 
 const selectedRoomThings = ref(null);
+let clockTimer = null;
+const healthClockMs = ref(null);
 
 const roomCount = computed(() => rooms.value.length);
 const thingCount = computed(() => things.value.length);
@@ -64,10 +66,38 @@ function formatPrice(value) {
   return Number(value).toFixed(2);
 }
 
+function formatDateTime(value) {
+  if (!value) {
+    return "-";
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return String(value);
+  }
+
+  const pad = (n) => String(n).padStart(2, "0");
+  const yyyy = date.getFullYear();
+  const mm = pad(date.getMonth() + 1);
+  const dd = pad(date.getDate());
+  const hh = pad(date.getHours());
+  const mi = pad(date.getMinutes());
+  const ss = pad(date.getSeconds());
+  return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
+}
+
+function parseDateTimeMs(value) {
+  if (!value) {
+    return null;
+  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.getTime();
+}
+
 function clearRoomForm() {
   roomForm.id = null;
-  roomForm.computerId = "";
-  roomForm.bedId = "";
+  roomForm.computerId = null;
+  roomForm.bedId = null;
 }
 
 function clearThingForm() {
@@ -86,12 +116,20 @@ function clearUserForm() {
   userForm.isActive = true;
 }
 
+function thingOptionLabel(thing) {
+  const color = thing.color ?? "NoColor";
+  const price = formatPrice(thing.price);
+  const number = thing.number ?? "-";
+  return `#${thing.id} | ${color} | $${price} | qty ${number}`;
+}
+
 async function loadOverview() {
   overview.loading = true;
   try {
     const [health, hello] = await Promise.all([api.getHealth(), api.getHello()]);
     overview.health = health;
     overview.hello = hello;
+    healthClockMs.value = parseDateTimeMs(health?.time) ?? Date.now();
   } catch (error) {
     showMessage(error.message, "error");
   } finally {
@@ -230,8 +268,8 @@ async function submitUser() {
 
 function editRoom(room) {
   roomForm.id = room.id;
-  roomForm.computerId = room.computerId ?? "";
-  roomForm.bedId = room.bedId ?? "";
+  roomForm.computerId = room.computerId ?? null;
+  roomForm.bedId = room.bedId ?? null;
   activeTab.value = "rooms";
 }
 
@@ -306,8 +344,33 @@ async function refreshAll() {
   await Promise.all([loadOverview(), loadRooms(), loadThings(), loadUsers()]);
 }
 
+function startLocalClock() {
+  if (clockTimer) {
+    return;
+  }
+
+  clockTimer = setInterval(() => {
+    if (healthClockMs.value !== null) {
+      healthClockMs.value += 1000;
+    }
+  }, 1000);
+}
+
+function stopLocalClock() {
+  if (!clockTimer) {
+    return;
+  }
+  clearInterval(clockTimer);
+  clockTimer = null;
+}
+
 onMounted(() => {
   refreshAll();
+  startLocalClock();
+});
+
+onUnmounted(() => {
+  stopLocalClock();
 });
 </script>
 
@@ -363,7 +426,7 @@ onMounted(() => {
           </div>
           <div class="metric-row">
             <div class="metric-card"><span>Version</span><strong>{{ overview.health?.version ?? "-" }}</strong></div>
-            <div class="metric-card"><span>Time</span><strong>{{ overview.health?.time ?? "-" }}</strong></div>
+            <div class="metric-card"><span>Time</span><strong>{{ formatDateTime(healthClockMs ?? overview.health?.time) }}</strong></div>
           </div>
         </article>
 
@@ -380,8 +443,24 @@ onMounted(() => {
             <button class="ghost-button" @click="clearRoomForm">Clear</button>
           </div>
           <div class="form-grid">
-            <label><span>Computer Id</span><input v-model="roomForm.computerId" type="number" /></label>
-            <label><span>Bed Id</span><input v-model="roomForm.bedId" type="number" /></label>
+            <label>
+              <span>Computer Thing</span>
+              <select v-model="roomForm.computerId">
+                <option :value="null">None</option>
+                <option v-for="thing in things" :key="`computer-${thing.id}`" :value="thing.id">
+                  {{ thingOptionLabel(thing) }}
+                </option>
+              </select>
+            </label>
+            <label>
+              <span>Bed Thing</span>
+              <select v-model="roomForm.bedId">
+                <option :value="null">None</option>
+                <option v-for="thing in things" :key="`bed-${thing.id}`" :value="thing.id">
+                  {{ thingOptionLabel(thing) }}
+                </option>
+              </select>
+            </label>
           </div>
           <div class="form-actions">
             <button class="primary-button" @click="submitRoom">{{ roomForm.id ? "Save" : "Create" }}</button>
