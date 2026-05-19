@@ -18,8 +18,8 @@ const authUser = ref(null);
 const authLoading = ref(false);
 const showLoginPassword = ref(false);
 const loginForm = reactive({
-  userNameOrEmail: "superadmin",
-  password: "Admin@123456"
+  userNameOrEmail: "",
+  password: ""
 });
 
 const overview = reactive({ health: null, hello: null, loading: false });

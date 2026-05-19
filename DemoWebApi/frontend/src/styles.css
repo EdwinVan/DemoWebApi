@@ -163,8 +163,13 @@ button {
 }
 
 .logout-button {
-  background: rgba(223, 155, 45, 0.24);
-  color: #5f4618;
+  background: #f7de9e;
+  color: #4a3608;
+  border: 1px solid rgba(90, 62, 7, 0.18);
+}
+
+.logout-button:hover {
+  background: #fbe7b8;
 }
 
 .mini-stats {
